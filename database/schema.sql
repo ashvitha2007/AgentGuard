@@ -1,0 +1,29 @@
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY, email VARCHAR(255) UNIQUE NOT NULL, name VARCHAR(255) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL, role VARCHAR(50) DEFAULT 'admin',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS uploaded_files (
+  id SERIAL PRIMARY KEY, filename VARCHAR(255) NOT NULL, stored_path VARCHAR(500) NOT NULL,
+  size INTEGER DEFAULT 0, classification VARCHAR(50) DEFAULT 'public', uploaded_by INTEGER,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS action_requests (
+  id SERIAL PRIMARY KEY, user_id INTEGER, action_type VARCHAR(100) NOT NULL,
+  description TEXT NOT NULL, target VARCHAR(500), data_classification VARCHAR(100) DEFAULT 'public',
+  data_source VARCHAR(255) DEFAULT 'user', file_id INTEGER, status VARCHAR(50) DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS risk_assessments (
+  id SERIAL PRIMARY KEY, action_request_id INTEGER NOT NULL, risk_score FLOAT NOT NULL,
+  risk_level VARCHAR(50) NOT NULL, injection_detected BOOLEAN DEFAULT FALSE,
+  reasons TEXT DEFAULT '', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS approvals (
+  id SERIAL PRIMARY KEY, action_request_id INTEGER NOT NULL, status VARCHAR(50) DEFAULT 'pending',
+  reason TEXT, resolved_by INTEGER, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, resolved_at TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS audit_logs (
+  id SERIAL PRIMARY KEY, action_request_id INTEGER, event VARCHAR(255) NOT NULL,
+  details TEXT DEFAULT '', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,0 +1,7 @@
+{
+  "low": "0-39 = allow",
+  "medium": "40-69 = human approval",
+  "high": "70-100 = deny",
+  "prompt_injection": "deny",
+  "external_sensitive_data": "deny"
+}
